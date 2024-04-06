@@ -1,0 +1,6 @@
+@jeremy_blog_api_HostAddress = http://localhost:5150
+
+GET {{jeremy_blog_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
