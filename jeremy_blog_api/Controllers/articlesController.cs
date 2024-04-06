@@ -61,6 +61,46 @@ namespace jeremy_blog_api.Controllers
                 }
             return list;
         }
+        [HttpGet("id")]
+        public IActionResult Get(int id)
+        {
+            BlogArticleModal article = new BlogArticleModal();
+            using (MySqlConnection connection = GetConnection())
+                try
+                {
+
+                    connection.Open();
+                    string query = "SELECT * FROM blog_articles WHERE id = @Id";
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    MySqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        article.Title = reader["title"].ToString();
+                        article.Id = reader["id"].ToString();
+                        article.Content = reader["content"].ToString();
+                        article.UpdateTime = reader["updateTime"].ToString();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+
+                    return StatusCode(500, ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            return Ok(article);
+        }
 
 
         public class ArticleInputModel
